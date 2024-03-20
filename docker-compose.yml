@@ -4,7 +4,7 @@ services:
     image: avesechov1
     command: --mconf 0.1 --add_csv --i audio_UK/ --lat 51.5  --lon -3 --model_name 'fc' --maxpool
     volumes:
-      - /home/burooj/models/avesecho-v1.0/outputs:/app/outputs
-      - /home/burooj/models/avesecho-v1.0/audio:/app/audio
+      - /home/burooj/models/avesecho-v1/outputs:/app/outputs
+      - /home/burooj/models/avesecho-v1/audio:/app/audio
     shm_size: 4g
 

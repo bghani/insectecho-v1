@@ -6,3 +6,5 @@ __pycache__/
 *.so
 *.pyd
 .DS_Store
+analyze_warbler.py
+Dockerfile

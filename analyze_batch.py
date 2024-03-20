@@ -13,7 +13,7 @@ from config import *
 # I/O args
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slist', type=str, default='inputs/list_sp_ml.csv', help='Path to the species list.')
-parser.add_argument('--flist', type=str, default='species_list.csv', help='Path to the filter list of species.')
+parser.add_argument('--flist', type=str, default='inputs/species_list.csv', help='Path to the filter list of species.')
 parser.add_argument('--i', type=str, default='audio/', help='Input audio sample.')
 parser.add_argument('--o', type=str, default='tmp/avesecho', help='Output directory for temporary audio chunks.')
 parser.add_argument('--mconf', type=float, default=0.1, help='Minimum confidence threshold for predictions.')
