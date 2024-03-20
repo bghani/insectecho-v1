@@ -44,11 +44,11 @@ class AvesEcho:
             self.model = get_basic_model(mode = 'logits', arch="passt_s_kd_p16_128_ap486")
             self.model.net =  get_model_passt(arch="passt_s_kd_p16_128_ap486",  n_classes=self.n_classes)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('checkpoints/best_model_fc_passt_8march.pt', map_location=device))
+            self.model.load_state_dict(torch.load('checkpoints/best_model_passt.pt', map_location=device))
         if self.model_name == 'fc':
             self.model = avesecho(NumClasses=self.n_classes)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('checkpoints/best_model_fc_mixup_backnoise_train0.pt', map_location=device))#best_model_fc_mixup_backnoise_train0.pt
+            self.model.load_state_dict(torch.load('checkpoints/best_model_fc.pt', map_location=device))
 
         
     def analyze_audio(self, audio_file_path, lat=None, lon=None):

@@ -3,7 +3,7 @@
     "api_type": "multilabel",
     "docker": "registry.gitlab.com/arise-biodiversity/dsi/algorithms/naturalis-birdsound-classifier/avesecho:1094587389",
     "short_name": "avesecho",
-    "description": "Bird sound classifier for European breeding bird species",
+    "description": "Multi-label sound-based classifier for European breeding birds",
     "version": "1.0",
     "availability": "public",
     "geographical_coverage": {
@@ -50,7 +50,7 @@
     "authors": [
       "burooj.ghani@naturalis.nl"
     ],
-    "documentation": "https://gitlab.com/arise-biodiversity/DSI/algorithms/naturalis-birdsound-classifier",
+    "documentation": "https://gitlab.com/arise-biodiversity/DSI/algorithms/avesecho-v1",
     "citation_info": "URL to model readme",
     "inference_costs": [
       {
