@@ -1,0 +1,8 @@
+checkpoints/*.pt filter=lfs diff=lfs merge=lfs -text
+hear21passt filter=lfs diff=lfs merge=lfs -text
+hear21passt/* filter=lfs diff=lfs merge=lfs -text
+checkpoints/*.tflite filter=lfs diff=lfs merge=lfs -text
+audio_UK/*.wav filter=lfs diff=lfs merge=lfs -text
+audio_UK/*.mp3 filter=lfs diff=lfs merge=lfs -text
+audio/*.wav filter=lfs diff=lfs merge=lfs -text
+audio/*.mp3 filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  avesecho:
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1  # Reserve 1 GPU
+            capabilities: [gpu]
+    environment:
+      - CUDA_VISIBLE_DEVICES=1  
+

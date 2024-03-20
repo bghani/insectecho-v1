@@ -1,0 +1,62 @@
+{
+    "$comment": "",
+    "api_type": "multilabel",
+    "docker": "registry.gitlab.com/arise-biodiversity/dsi/algorithms/naturalis-birdsound-classifier/avesecho:1094587389",
+    "short_name": "avesecho",
+    "description": "Bird sound classifier for European breeding bird species",
+    "version": "1.0",
+    "availability": "public",
+    "geographical_coverage": {
+      "country_codes": [
+        "EU"
+      ]
+    },
+    "name_ontology_uri": "https://gitlab.com/arise-biodiversity/DSI/algorithms/naturalis-birdsound-classifier/-/raw/main/inputs/avesecho_ontology.json?ref_type=heads",
+    "taxonomic coverage": {
+      "Custom_List": [
+        "custom_list"
+      ]
+    },
+    "input": {
+      "media_modality": [
+        "audio"
+      ],
+      "mime_types": [
+        "audio/wav",
+        "audio/mp3",
+        "audio/ogg"
+      ],
+      "multi": {
+        "type": "series",
+        "state": {
+          "$ref": "https://schema.arise-biodiversity.nl/dsi/v0/api_output_multiple_objects.json"
+        }
+      },
+      "max_filesize_kb": 999999,
+      "resolution": {
+        "$comment": "Shall we use explicit keys, or tensor shapes such as (3280,2464)",
+        "min": {
+          "width": 3280,
+          "height": 2464
+        },
+        "max": {
+          "width": 3280,
+          "height": 2464
+        }
+      },
+      "batch_support": true,
+      "batch_size": 64
+    },
+    "authors": [
+      "burooj.ghani@naturalis.nl"
+    ],
+    "documentation": "https://gitlab.com/arise-biodiversity/DSI/algorithms/naturalis-birdsound-classifier",
+    "citation_info": "URL to model readme",
+    "inference_costs": [
+      {
+        "hardware_shortname": "nvidia_a40",
+        "inference_time_s": 0.045
+      }
+    ],
+    "configuration": {}
+  }
