@@ -3,6 +3,12 @@ from models import *
 from util import *
 
 
+# Define the function that takes Count and Threshold as input and applies the specified formula
+def adjusted_threshold(count, threshold):
+    c = count / (count + 100)
+    return threshold * c + 0.1 * (1 - c)
+
+
 def inference(model, data_loader, device, mapping, allowed_species, threshold):
     model.eval()  # Set the model to evaluation mode
     torch.set_grad_enabled(False)  # Disable gradient calculation
@@ -30,8 +36,19 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
         #outputs = T_scaling(outputs, temperature)
         outputs = F.sigmoid(outputs)
 
-        # Apply the threshold to get predictions mask for the entire output
-        predicted_mask = outputs > threshold
+        if threshold == None:
+            df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+            sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
+            # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
+            adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
+            adjusted_thresholds_tensor = torch.tensor(adjusted_thresholds.values)
+
+            # Apply the threshold to get predictions mask for the entire output
+            predicted_mask = outputs > adjusted_thresholds_tensor.to(device) 
+        else:
+            predicted_mask = outputs > threshold
+
+        
 
         # Get indices and scores for non-filtered predictions
         predicted_indices = [torch.nonzero(predicted_mask[i], as_tuple=False).squeeze() for i in range(predicted_mask.shape[0])]
@@ -46,8 +63,13 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
         # Make sure 'allowed_indices' is correctly defined as per your earlier snippet
         filtered_outputs = outputs[:, allowed_indices]
 
-        # Apply the threshold to get predictions mask for the filtered output
-        predicted_mask_filtered = filtered_outputs > threshold
+        if threshold == None:
+            adjusted_thresholds_filtered = adjusted_thresholds_tensor[allowed_indices]
+
+            # Apply the threshold to get predictions mask for the filtered output
+            predicted_mask_filtered = filtered_outputs > adjusted_thresholds_filtered.to(device)
+        else:
+            predicted_mask_filtered = filtered_outputs > threshold
 
         # Get indices and scores for filtered predictions
         predicted_indices_filtered = [torch.nonzero(predicted_mask_filtered[i], as_tuple=False).squeeze() for i in range(predicted_mask_filtered.shape[0])]
@@ -111,6 +133,7 @@ def inference_warbler(model, data_loader, device, mapping, allowed_species, thre
         # Temperature scaling
         #outputs = T_scaling(outputs, temperature)
         outputs = F.sigmoid(outputs)
+
 
         # Apply the threshold to get predictions mask for the entire output
         predicted_mask = outputs > threshold
