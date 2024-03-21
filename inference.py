@@ -28,7 +28,7 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
         outputs = F.sigmoid(outputs)
 
 
-        if allowed_species is not None:
+        if allowed_species is None:
 
             if threshold == None:
                 df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
@@ -62,6 +62,12 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
             filtered_outputs = outputs[:, allowed_indices]
 
             if threshold == None:
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
+                # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
+                adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
+                adjusted_thresholds_tensor = torch.tensor(adjusted_thresholds.values)
+
                 adjusted_thresholds_filtered = adjusted_thresholds_tensor[allowed_indices]
                 # Apply the threshold to get predictions mask for the filtered output
                 predicted_mask_filtered = filtered_outputs > adjusted_thresholds_filtered.to(device)
@@ -125,7 +131,7 @@ def inference_maxpool(model, data_loader, device, mapping, allowed_species, thre
         #outputs = T_scaling(outputs, temperature)
         outputs = F.sigmoid(outputs)
 
-        if allowed_species is not None:
+        if allowed_species is None:
 
             if threshold == None:
                 df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
@@ -163,6 +169,7 @@ def inference_maxpool(model, data_loader, device, mapping, allowed_species, thre
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
                 adjusted_thresholds_tensor = torch.tensor(adjusted_thresholds.values)
 
+                adjusted_thresholds_tensor = adjusted_thresholds_tensor[allowed_indices]
                 # Apply the threshold to get predictions mask for the entire output
                 predicted_mask_filtered = filtered_outputs > adjusted_thresholds_tensor.to(device) 
             else:

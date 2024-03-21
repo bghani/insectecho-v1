@@ -20,5 +20,3 @@ if __name__ == "__main__":
     species, probabilities = classifier.analyze_warblr_audio('audio/recording.wav', lat=None, lon=None)
 
     print(f'Predictions for {species} are: {probabilities}')
-
-

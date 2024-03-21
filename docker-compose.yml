@@ -2,7 +2,7 @@ version: '3.7'
 services:
   avesecho:
     image: avesechov1
-    command: --mconf 0.1 --i audio/ --model_name 'fc'
+    command: --i audio_test/ --model_name 'fc' --add_csv --add_filtering --maxpool
     volumes:
       - /home/burooj/models/avesecho-v1/outputs:/app/outputs
       - /home/burooj/models/avesecho-v1/audio:/app/audio
