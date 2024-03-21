@@ -361,7 +361,7 @@ def format_time(seconds):
     # Format seconds with leading zero if necessary
     return f"{minutes}:{seconds:02d}"
 
-def create_json_output(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
+def create_json(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
 
      # Create a predictions file name
     filename_without_ext = fname.split('.')[0]  
@@ -441,7 +441,7 @@ def create_json_output(predictions, scores, files, args, df, add_csv, fname, m_c
 
 
 
-def create_json_output_warbler(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
+def create_json_maxpool(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
 
     # Create a predictions file name
     filename_without_ext = fname.split('.')[0]  
@@ -551,11 +551,10 @@ def setup_filtering(lat, lon, add_filtering, flist, species_list):
         filtering_list_series = get_species_list(lat, lon)
         filtering_list = filtering_list_series['birdlife_scientific_name'].tolist()
     elif not add_filtering:
-        filtering_list = species_list
+        filtering_list = None
     else: 
         filtering_list = []
         with open(flist) as f:
             for line in f:
                 filtering_list.append(line.strip())
-            #filtering_list.append('Noise')
     return filtering_list 

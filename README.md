@@ -33,7 +33,7 @@ Below are key configurations in the `docker-compose.yml` file:
 - `command`: This defines the arguments that accompany the command that will run when the container starts up (defined in `start.sh`):
   - `--mconf`: Sets the confidence threshold for the model. If set to `None` (default), pre-computed species-wise thresholds are used. For no thresholds set to `0`.
   - `--add_csv`: Enables output in CSV format in addition to the JSON output.
-  - `--add_filtering`: Adds location based filtering emploting the `flist`.
+  - `--add_filtering`: Adds location based filtering employing the `flist`.
   - `--flist`: a species list needs to be supplied if adding the `--add_filtering` flag. 
   - `--i`: Sets the input directory for audio files within the container.
   - `--lat`: Latitude for geographic filtering. Ignores the `flist`.

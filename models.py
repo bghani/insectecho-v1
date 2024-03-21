@@ -87,17 +87,11 @@ class AvesEcho:
 
 
         if self.maxpool:
-            predictions, predictions_filtered, scores_filtered, scores, files = inference_warbler(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-            if self.add_filtering or (lat is not None and lon is not None):
-                create_json_output_warbler(predictions_filtered, scores_filtered, files, self.args, df, self.add_csv, filename, self.mconf, filtered=True)
-            else:
-                create_json_output_warbler(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+            predictions, scores, files = inference_maxpool(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
+            create_json_maxpool(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
         else:
-            predictions, predictions_filtered, scores_filtered, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-            if self.add_filtering or (lat is not None and lon is not None):
-                create_json_output(predictions_filtered, scores_filtered, files, self.args, df, self.add_csv, filename, self.mconf, filtered=True)
-            else:
-                create_json_output(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+            predictions, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
+            create_json(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
 
             
         #Compute the elapsed time in seconds
@@ -149,17 +143,11 @@ class AvesEcho:
 
 
             if self.maxpool:
-                predictions, predictions_filtered, scores_filtered, scores, files = inference_warbler(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-                if self.add_filtering or (lat is not None and lon is not None):
-                    create_json_output_warbler(predictions_filtered, scores_filtered, files, self.args, df, self.add_csv, filename, self.mconf, filtered=True)
-                else:
-                    create_json_output_warbler(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+                predictions, scores, files = inference_maxpool(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
+                create_json_maxpool(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
             else:
-                predictions, predictions_filtered, scores_filtered, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-                if self.add_filtering or (lat is not None and lon is not None):
-                    create_json_output(predictions_filtered, scores_filtered, files, self.args, df, self.add_csv, filename, self.mconf, filtered=True)
-                else:
-                    create_json_output(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+                predictions, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
+                create_json(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
 
                 
             # Empty temporary audio chunks directory
@@ -201,7 +189,7 @@ class AvesEcho:
         df = pd.read_csv(self.avesecho_mapping, header=None, names=['ScientificName', 'CommonName'])
 
         # Run the inference
-        predictions, predictions_filtered, scores_filtered, scores, files = inference_warbler(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
+        predictions, scores, files = inference_warbler(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
             
         #Compute the elapsed time in seconds
         elapsed_time = time.time() - start_time
@@ -212,4 +200,4 @@ class AvesEcho:
         # Empty temporary audio chunks directory
         shutil.rmtree(self.outputd)
         
-        return predictions_filtered, scores_filtered
+        return predictions, scores

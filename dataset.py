@@ -1,7 +1,6 @@
 from config import *
 from util import *
 
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
            
