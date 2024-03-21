@@ -2,7 +2,7 @@
     "$comment": "",
     "api_type": "multilabel",
     "docker": "registry.gitlab.com/arise-biodiversity/dsi/algorithms/naturalis-birdsound-classifier/avesecho:1094587389",
-    "short_name": "avesecho",
+    "short_name": "avesecho-v1",
     "description": "Multi-label sound-based classifier for European breeding birds",
     "version": "1.0",
     "availability": "public",
