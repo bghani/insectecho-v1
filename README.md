@@ -31,13 +31,13 @@ Below are key configurations in the `docker-compose.yml` file:
 
 - `image: avesechov1`: This specifies the name of the Docker image to use for the container.
 - `command`: This defines the arguments that accompany the command that will run when the container starts up (defined in `start.sh`):
-  - `--mconf`: Sets the confidence threshold for the model.
+  - `--mconf`: Sets the confidence threshold for the model. If set to `None` (default), pre-computed species-wise thresholds are used. For no thresholds set to `0`.
   - `--add_csv`: Enables output in CSV format in addition to the JSON output.
-  - `--add_filtering`: Adds location based filtering.
+  - `--add_filtering`: Adds location based filtering emploting the `flist`.
   - `--flist`: a species list needs to be supplied if adding the `--add_filtering` flag. 
   - `--i`: Sets the input directory for audio files within the container.
-  - `--lat`: Latitude for geographic filtering.
-  - `--lon`: Longitude for geographic filtering.
+  - `--lat`: Latitude for geographic filtering. Ignores the `flist`.
+  - `--lon`: Longitude for geographic filtering. Ignores the `flist`.
   - `--maxpool`: Use model for generating temporally-summarised output.
   - `--model_name`: Name of the model to use (fc - CNN/ passt - Transformer-based; by default the classifier is set to `fc`).
 - `deploy.resources.reservations.devices`: Reserves GPU resources for the container, allowing for GPU acceleration in processing.
