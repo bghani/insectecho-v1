@@ -14,7 +14,7 @@ from config import *
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slist', type=str, default='inputs/list_sp_ml.csv', help='Path to the species list.')
 parser.add_argument('--flist', type=str, default='inputs/species_list_nl.csv', help='Path to the filter list of species.')
-parser.add_argument('--i', type=str, default='audio/', help='Input audio sample.')
+parser.add_argument('--i', type=str, default='audio', help='Input audio sample.')
 parser.add_argument('--o', type=str, default='tmp/avesecho', help='Output directory for temporary audio chunks.')
 parser.add_argument('--mconf', type=float, default=None, help='Minimum confidence threshold for predictions.')
 parser.add_argument('--lat', type=float, default=None, help='Latitude for geographic filtering.')
@@ -28,7 +28,7 @@ parser.add_argument('--model_name', type=str, default='fc', help='Name of the mo
 if __name__ == "__main__":
 
     args = parser.parse_args()
-
+   
     start_time = time.time()
 
     classifier = AvesEcho(model_name=args.model_name, slist=args.slist, flist=args.flist,

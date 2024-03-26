@@ -11,7 +11,7 @@
         "EU"
       ]
     },
-    "name_ontology_uri": "https://gitlab.com/arise-biodiversity/DSI/algorithms/naturalis-birdsound-classifier/-/raw/main/inputs/avesecho_ontology.json?ref_type=heads",
+    "name_ontology_uri": "https://gitlab.com/arise-biodiversity/DSI/algorithms/avesecho-v1/-/raw/main/inputs/avesechov1_ontology.json?ref_type=heads",
     "taxonomic coverage": {
       "Custom_List": [
         "custom_list"

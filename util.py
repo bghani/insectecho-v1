@@ -361,7 +361,7 @@ def format_time(seconds):
     # Format seconds with leading zero if necessary
     return f"{minutes}:{seconds:02d}"
 
-def create_json(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
+def create_json(output, predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
 
      # Create a predictions file name
     filename_without_ext = fname.split('.')[0]  
@@ -372,19 +372,9 @@ def create_json(predictions, scores, files, args, df, add_csv, fname, m_conf, fi
             writer = csv.writer(file)
             writer.writerow(["Begin Time", "End Time", "File", "Prediction", "Score"])  # write header
 
-
-    output = {
-        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
-        "generated_by": {
-            "datetime": "2021-04-14T13:26:29Z",
-            "tag": "mfn_euro_birds",
-            "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
-        },
-        "media": [{"filename": args.i, "id": args.i.split('/')[-1]}],
-        "region_groups": [],
-        "predictions": []
-    }
-
+    # Add each file to the 'media' list in output
+    output['media'].append({"filename": f'{args.i}/{fname}', "id": fname})
+    
     for i, prediction in enumerate(predictions):
         prediction_sp = []
         begin_time = i * 3
@@ -405,14 +395,14 @@ def create_json(predictions, scores, files, args, df, add_csv, fname, m_conf, fi
                 with open(f'{pred_name}.csv', 'a', newline='') as file:
                     writer = csv.writer(file)
                     #writer.writerow([begin_time, end_time, files[i], name, score]) # uncomment for time in seconds in csv
-                    writer.writerow([formatted_begin_time, formatted_end_time, files[i], f'{common_name}_{name}', score]) # uncomment for time in minutes:seconds in csv
+                    writer.writerow([formatted_begin_time, formatted_end_time, fname, f'{common_name}_{name}', score]) # uncomment for time in minutes:seconds in csv
         
-        region_group_id = f"{files[i]}?region={i}"
+        region_group_id = f"{f'{args.i}/{fname}'}?region={i}"
         
         output["region_groups"].append({
             "id": region_group_id,
             "regions": [{
-                "media_id": args.i.split('/')[-1],
+                "media_id": fname,
                 "box": {
                     "t1": float(begin_time),
                     "t2": float(end_time)
@@ -433,15 +423,16 @@ def create_json(predictions, scores, files, args, df, add_csv, fname, m_conf, fi
         })
     
     # Determine the output file name based on filtering
-    json_name = f'{pred_name}.json'
+    #json_name = f'{pred_name}.json'
     
     # Write the output dictionary to a JSON file
-    with open(json_name, 'w') as json_file:
-        json.dump(output, json_file, indent=4)
+    #with open(json_name, 'w') as json_file:
+    #    json.dump(output, json_file, indent=4)
+    return output
 
 
 
-def create_json_maxpool(predictions, scores, files, args, df, add_csv, fname, m_conf, filtered=False):
+def create_json_maxpool(output, predictions, scores, files, args, df, add_csv, fname, m_conf, length, filtered=False):
 
     # Create a predictions file name
     filename_without_ext = fname.split('.')[0]  
@@ -454,21 +445,11 @@ def create_json_maxpool(predictions, scores, files, args, df, add_csv, fname, m_
             writer.writerow(["File", "Prediction", "Score"])  # write header
     # For Warblr it is always 10s
     begin_time = 0
-    end_time = 10
+    end_time = length*3
 
-    output = {
-        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
-        "generated_by": {
-            "datetime": "2021-04-14T13:26:29Z",
-            "tag": "mfn_euro_birds",
-            "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
-        },
-        "media": [{"filename": args.i, "id": args.i.split('/')[-1]}],
-        "region_groups": [],
-        "predictions": []
-    }
+    # Add each file to the 'media' list in output
+    output['media'].append({"filename": f'{args.i}/{fname}', "id": fname})
 
-  
     prediction_sp = []
         
         
@@ -487,12 +468,12 @@ def create_json_maxpool(predictions, scores, files, args, df, add_csv, fname, m_
                 #writer.writerow([begin_time, end_time, files[i], name, score]) # uncomment for time in seconds in csv
                 writer.writerow([fname, common_name, score]) # uncomment for time in minutes:seconds in csv
     
-    region_group_id = f"{args.i.split('/')[-1]}?region={0}"
+    region_group_id = f"{f'{args.i}/{fname}'}?region={0}"
     
     output["region_groups"].append({
         "id": region_group_id,
         "regions": [{
-            "media_id": args.i.split('/')[-1],
+            "media_id": fname,
             "box": {
                 "t1": float(begin_time),
                 "t2": float(end_time)
@@ -512,12 +493,7 @@ def create_json_maxpool(predictions, scores, files, args, df, add_csv, fname, m_
         }
     })
 
-    # Determine the output file name based on filtering
-    json_name = f'{pred_name}.json'
-
-    # Write the output dictionary to a JSON file
-    with open(json_name, 'w') as json_file:
-        json.dump(output, json_file, indent=4)
+    return output
 
 
 def load_species_list(path):

@@ -8,13 +8,10 @@ class avesecho(nn.Module):
     def __init__(self, NumClasses=585, pretrain=True, ExternalEmbeddingSize=320, hidden_layer_size=100):
         super(avesecho, self).__init__()
         self.fc1 = nn.Linear(ExternalEmbeddingSize, NumClasses)
-        self.fc2 = nn.Linear(hidden_layer_size, NumClasses)
-        self.relu = nn.ReLU()  # ReLU activation function
-        #self.fc1 = nn.Linear(self.middim[b] + ExternalEmbeddingSize, NumClasses)
-        #self.fc1 = nn.Linear(self.middim[b], NumClasses)
-        #self.dropout = nn.Dropout(0.5)
-        self.bn1 = nn.BatchNorm1d(NumClasses)
-        self.softmax = nn.Softmax(dim=1)
+        #self.fc2 = nn.Linear(hidden_layer_size, NumClasses)
+        #self.relu = nn.ReLU()  # ReLU activation function
+        #self.bn1 = nn.BatchNorm1d(NumClasses)
+        
 
     def forward(self, x, emb):
         
@@ -48,7 +45,7 @@ class AvesEcho:
         if self.model_name == 'fc':
             self.model = avesecho(NumClasses=self.n_classes)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('checkpoints/best_model_fc.pt', map_location=device))
+            self.model.load_state_dict(torch.load('/data/burooj/checkpoints/avesecho_ml/best_model_fc_25march_mixup_80_backn_nosampler_4.pt', map_location=device))
 
         
     def analyze_audio(self, audio_file_path, lat=None, lon=None):
@@ -86,13 +83,32 @@ class AvesEcho:
         df = pd.read_csv(self.avesecho_mapping, header=None, names=['ScientificName', 'CommonName'])
 
 
+        output = {
+        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
+        "generated_by": {
+            "datetime": "2021-04-14T13:26:29Z",
+            "tag": "mfn_euro_birds",
+            "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
+        },
+        "media": [],
+        "region_groups": [],
+        "predictions": []
+        }
+
         if self.maxpool:
             predictions, scores, files = inference_maxpool(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-            create_json_maxpool(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+            output = create_json_maxpool(output, predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf, len(inference_data))
         else:
             predictions, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-            create_json(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+            output = create_json(output, predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+        
 
+        # Determine the output file name based on filtering
+        json_name = f'outputs/analysis-results.json'
+    
+        # Write the output dictionary to a JSON file
+        with open(json_name, 'w') as json_file:
+            json.dump(output, json_file, indent=4)
             
         #Compute the elapsed time in seconds
         elapsed_time = time.time() - start_time
@@ -109,6 +125,19 @@ class AvesEcho:
 
       
         filtering_list = setup_filtering(lat, lon, self.add_filtering, self.flist, self.slist)
+
+
+        output = {
+        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
+        "generated_by": {
+            "datetime": "2021-04-14T13:26:29Z",
+            "tag": "mfn_euro_birds",
+            "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
+        },
+        "media": [],
+        "region_groups": [],
+        "predictions": []
+        }
         
         for audio_file in os.listdir(audio_dir_path):
 
@@ -144,14 +173,21 @@ class AvesEcho:
 
             if self.maxpool:
                 predictions, scores, files = inference_maxpool(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-                create_json_maxpool(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+                output = create_json_maxpool(output, predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf, len(inference_data))
             else:
                 predictions, scores, files = inference(self.model, inference_generator, device, self.species_list, filtering_list, self.mconf)
-                create_json(predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
+                output = create_json(output, predictions, scores, files, self.args, df, self.add_csv, filename, self.mconf)
 
                 
             # Empty temporary audio chunks directory
             shutil.rmtree(self.outputd)
+        
+        # Determine the output file name based on filtering
+        json_name = f'outputs/analysis-results.json'
+    
+        # Write the output dictionary to a JSON file
+        with open(json_name, 'w') as json_file:
+            json.dump(output, json_file, indent=4)
         
         
     def analyze_warblr_audio(self, audio_file_path, lat=None, lon=None):
