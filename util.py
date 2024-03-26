@@ -443,7 +443,7 @@ def create_json_maxpool(output, predictions, scores, files, args, df, add_csv, f
         with open(f'{pred_name}.csv', 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["File", "Prediction", "Score"])  # write header
-    # For Warblr it is always 10s
+    
     begin_time = 0
     end_time = length*3
 
