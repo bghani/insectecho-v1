@@ -45,7 +45,7 @@ class AvesEcho:
         if self.model_name == 'fc':
             self.model = avesecho(NumClasses=self.n_classes)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('/data/burooj/checkpoints/avesecho_ml/best_model_fc_25march_mixup_80_backn_nosampler_4.pt', map_location=device))
+            self.model.load_state_dict(torch.load('checkpoints/best_model_fc_1.pt', map_location=device))
 
         
     def analyze_audio(self, audio_file_path, lat=None, lon=None):
@@ -84,10 +84,9 @@ class AvesEcho:
 
 
         output = {
-        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
         "generated_by": {
-            "datetime": "2021-04-14T13:26:29Z",
-            "tag": "mfn_euro_birds",
+            "datetime": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "tag": "avesecho-v1",
             "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
         },
         "media": [],
@@ -128,10 +127,9 @@ class AvesEcho:
 
 
         output = {
-        "$comment": "based on https://docs.google.com/document/d/1xliXgmgBj0vu_E2M-3tu-VJWSk_rN2rQt4-XSBCTkxg/edit and then updated 2022-04 to bring into sync with camtrap-DP developments",
         "generated_by": {
-            "datetime": "2021-04-14T13:26:29Z",
-            "tag": "mfn_euro_birds",
+            "datetime": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "tag": "avesecho-v1",
             "version": "1fd68f8c8cb93ec4e45049fcf9a056628e9599aa815790a2a7b568aa"
         },
         "media": [],

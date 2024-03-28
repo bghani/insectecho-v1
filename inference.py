@@ -31,7 +31,7 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
         if allowed_species is None:
 
             if threshold == None:
-                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho_1.csv')
                 sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
                 # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
@@ -62,7 +62,7 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
             filtered_outputs = outputs[:, allowed_indices]
 
             if threshold == None:
-                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho_1.csv')
                 sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
                 # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
@@ -134,7 +134,7 @@ def inference_maxpool(model, data_loader, device, mapping, allowed_species, thre
         if allowed_species is None:
 
             if threshold == None:
-                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho_1.csv')
                 sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
                 # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
@@ -163,7 +163,7 @@ def inference_maxpool(model, data_loader, device, mapping, allowed_species, thre
             # Apply the threshold to get predictions mask for the filtered output
 
             if threshold == None:
-                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho_1.csv')
                 sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
                 # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)
@@ -247,7 +247,7 @@ def inference_warbler(model, data_loader, device, mapping, allowed_species, thre
         # Apply the threshold to get predictions mask for the filtered output
 
         if threshold == None:
-                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho.csv')
+                df_thresholds = pd.read_csv('inputs/species_thresholds_AvesEcho_1.csv')
                 sorted_df_thresholds = df_thresholds.sort_values(by='Scientific Name')
                 # Apply the function to each row in the sorted DataFrame and create a tensor of adjusted thresholds
                 adjusted_thresholds = sorted_df_thresholds.apply(lambda row: adjusted_threshold(row['Count'], row['Threshold']), axis=1)

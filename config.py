@@ -53,11 +53,12 @@ import glob
 import argparse
 import time
 import shutil
+from datetime import datetime
 
 
 # Set the device
 train_on_gpu=torch.cuda.is_available()
-device = torch.device("cuda:1" if train_on_gpu else "cpu")
+device = torch.device("cuda:0" if train_on_gpu else "cpu")
 
 # Global vars
 SEED = 78
