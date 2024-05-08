@@ -41,7 +41,7 @@ class AvesEcho:
             self.model = get_basic_model(mode = 'logits', arch="passt_s_kd_p16_128_ap486")
             self.model.net =  get_model_passt(arch="passt_s_kd_p16_128_ap486",  n_classes=self.n_classes)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('checkpoints/best_model_passt.pt', map_location=device))
+            self.model.load_state_dict(torch.load('/home/burooj/models/avesecho_ml/best_model_passt_kld_29mar.pt', map_location=device))
         if self.model_name == 'fc':
             self.model = avesecho(NumClasses=self.n_classes)
             self.model = self.model.to(device)

@@ -1,7 +1,7 @@
 {
     "$comment": "",
     "api_type": "multilabel",
-    "docker": "registry.gitlab.com/arise-biodiversity/dsi/algorithms/naturalis-birdsound-classifier/avesecho:1094587389",
+    "docker": "registry.gitlab.com/arise-biodiversity/dsi/algorithms/avesecho-v1/avesechov1:1231904157",
     "short_name": "avesecho-v1",
     "description": "Multi-label sound-based classifier for European breeding birds",
     "version": "1.0",
@@ -11,7 +11,7 @@
         "EU"
       ]
     },
-    "name_ontology_uri": "https://gitlab.com/arise-biodiversity/DSI/algorithms/avesecho-v1/-/raw/main/inputs/avesechov1_ontology.json?ref_type=heads",
+    "name_ontology_uri": "https://gitlab.com/arise-biodiversity/DSI/algorithms/avesecho-v1/-/raw/v1.0/inputs/avesechov1_ontology.json",
     "taxonomic coverage": {
       "Custom_List": [
         "custom_list"
