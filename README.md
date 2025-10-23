@@ -7,7 +7,7 @@ This repository contains **InsectEcho v1**, a multi-label insect species recogni
 **InsectEcho v1** has been developed for Europe and can classify grasshoppers, crickets, and a few cicada species.  
 
 Model training details, evaluation results, and background can be found in the paper:  
-📄 [**Generalization in insect sound classification: impact of transfer learning and dataset characteristics**](https://arxiv.org/abs/2503.15074)
+📄 [**InsectSet459: an open dataset of insect sounds for bioacoustic machine learning**](https://arxiv.org/abs/2503.15074)
 
 If you use this repository or the **InsectEcho v1** model in your work, please cite the above paper.  
 
