@@ -5,7 +5,7 @@ from util import *
 from hear21passt.base import get_basic_model, get_model_passt
 
 class avesecho(nn.Module):
-    def __init__(self, NumClasses=585, pretrain=True, ExternalEmbeddingSize=320, hidden_layer_size=100):
+    def __init__(self, NumClasses=459, pretrain=True, ExternalEmbeddingSize=320, hidden_layer_size=100):
         super(avesecho, self).__init__()
         self.fc1 = nn.Linear(ExternalEmbeddingSize, NumClasses)
         #self.fc2 = nn.Linear(hidden_layer_size, NumClasses)
@@ -39,14 +39,10 @@ class AvesEcho:
         # Load the model
         if self.model_name == 'passt':
             self.model = get_basic_model(mode = 'logits', arch="passt_s_kd_p16_128_ap486")
-            self.model.net =  get_model_passt(arch="passt_s_kd_p16_128_ap486",  n_classes=self.n_classes)
+            self.model.net =  get_model_passt(arch="passt_s_kd_p16_128_ap486",  n_classes=self.n_classes, pretrained=False)
             self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('/home/burooj/models/avesecho_ml/best_model_passt_kld_29mar.pt', map_location=device))
-        if self.model_name == 'fc':
-            self.model = avesecho(NumClasses=self.n_classes)
-            self.model = self.model.to(device)
-            self.model.load_state_dict(torch.load('checkpoints/best_model_fc_1.pt', map_location=device))
-
+            self.model.load_state_dict(torch.load('checkpoints/best_model_passt_96k_multilabel_1x_2.pt', map_location=device))#checkpoints/best_model_passt_96k_multilabel_1x_2.pt
+        
         
     def analyze_audio(self, audio_file_path, lat=None, lon=None):
         
@@ -63,7 +59,7 @@ class AvesEcho:
             os.makedirs(self.outputd)
 
         # Split signal into 3s chunks
-        self.split_signals(sound, self.outputd, signal_length=3, n_processes=10)
+        self.split_signals(sound, self.outputd, signal_length=SIGNAL_LENGTH, n_processes=10)
 
 
         # Extract the filename from the path
@@ -149,7 +145,7 @@ class AvesEcho:
                 os.makedirs(self.outputd)
 
             # Split signal into 3s chunks
-            self.split_signals(sound, self.outputd, signal_length=3, n_processes=10)
+            self.split_signals(sound, self.outputd, signal_length=5, n_processes=10)
 
 
             # Extract the filename from the path
@@ -203,7 +199,7 @@ class AvesEcho:
             os.makedirs(self.outputd)
 
         # Split signal into 3s chunks
-        self.split_signals(sound, self.outputd, signal_length=3, n_processes=10)
+        self.split_signals(sound, self.outputd, signal_length=5, n_processes=10)
 
 
         # Extract the filename from the path

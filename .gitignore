@@ -5,4 +5,5 @@ __pycache__/
 *.bak
 *.so
 *.pyd
+avesecho_bot.py
 .DS_Store

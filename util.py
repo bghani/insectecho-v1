@@ -235,8 +235,73 @@ def save_chunk(args):
     chunk, save_path, rate = args
     sf.write(save_path, chunk, rate)
 
+def pad_to_length(sig, chunk_size):
+    pad_amount = chunk_size - len(sig)
+    front = pad_amount // 2
+    back = pad_amount - front #+ pad_amount % 2
+    sig = np.pad(sig, [(front, back)], 'constant')
+    return sig
 
-def split_signals(filepath, output_dir, signal_length=15, n_processes=None):
+def split_signals(filepath, output_dir, signal_length=5, n_processes=None):
+    """
+    Function to split an audio signal into chunks and save them using multiprocessing.
+
+    Args:
+    - filepath: Path to the input audio file.
+    - output_dir: Directory where the output chunks will be saved.
+    - signal_length: Length of each audio chunk in seconds.
+    - n_processes: Number of processes to use in multiprocessing. If None, the number will be determined automatically.
+    """
+    # Configure logging
+    logging.basicConfig(
+        filename="audio_errors.log",
+        level=logging.ERROR,
+        format="%(asctime)s:%(levelname)s:%(message)s",
+    )
+
+    try:
+        # Load the signal
+        sig, rate = librosa.load(
+            filepath, sr=SAMPLE_RATE, offset=0.0, duration=None, res_type="kaiser_fast"
+        )
+    except Exception as e:
+        logging.error(f"Error loading audio from {filepath}: {e}")
+        return []
+    
+    chunk_size = int(signal_length * rate)
+    sig_splits = []
+
+    if len(sig) < chunk_size:
+        sig = pad_to_length(sig, chunk_size)
+        sig_splits = [sig]
+    else:
+        i = 0
+        while i < len(sig):
+            chunk = sig[i:i + chunk_size]
+            if len(chunk) < chunk_size:
+                chunk = pad_to_length(chunk, chunk_size)
+            sig_splits.append(chunk)
+            i += chunk_size
+        
+        # Split signal into chunks
+        #sig_splits = [sig[i:i + int(signal_length * rate)] for i in range(0, len(sig), int(signal_length * rate)) if len(sig[i:i + int(signal_length * rate)]) == int(signal_length * rate)]
+
+
+    # Prepare multiprocessing
+    with Pool(processes=n_processes) as pool:
+        args_list = []
+        for s_cnt, chunk in enumerate(sig_splits):
+            save_path = os.path.join(
+                output_dir,
+                f"{os.path.splitext(os.path.basename(filepath))[0]}_{s_cnt}.wav",
+            )
+            args_list.append((chunk, save_path, rate))
+
+        # Save each chunk in parallel
+        pool.map(save_chunk, args_list)
+
+
+def split_signals_old(filepath, output_dir, signal_length=15, n_processes=None):
     """
     Function to split an audio signal into chunks and save them using multiprocessing.
     
@@ -246,11 +311,15 @@ def split_signals(filepath, output_dir, signal_length=15, n_processes=None):
     - signal_length: Length of each audio chunk in seconds.
     - n_processes: Number of processes to use in multiprocessing. If None, the number will be determined automatically.
     """
+    # Configure logging
+    logging.basicConfig(filename='audio_errors.log', level=logging.ERROR, 
+                    format='%(asctime)s:%(levelname)s:%(message)s')
+
     try:
         # Load the signal
         sig, rate = librosa.load(filepath, sr=SAMPLE_RATE, offset=0.0, duration=None, res_type='kaiser_fast')
     except Exception as e:
-        print(f"Error loading audio: {e}")
+        logging.error(f"Error loading audio from {filepath}: {e}")
         return []
 
     # Split signal into chunks
@@ -377,8 +446,8 @@ def create_json(output, predictions, scores, files, args, df, add_csv, fname, m_
     
     for i, prediction in enumerate(predictions):
         prediction_sp = []
-        begin_time = i * 3
-        end_time = begin_time + 3
+        begin_time = i * 5
+        end_time = begin_time + 5
         formatted_begin_time = format_time(begin_time)
         formatted_end_time = format_time(end_time)
         
@@ -445,7 +514,7 @@ def create_json_maxpool(output, predictions, scores, files, args, df, add_csv, f
             writer.writerow(["File", "Prediction", "Score"])  # write header
     
     begin_time = 0
-    end_time = length*3
+    end_time = length*5
 
     # Add each file to the 'media' list in output
     output['media'].append({"filename": f'{args.i}/{fname}', "id": fname})

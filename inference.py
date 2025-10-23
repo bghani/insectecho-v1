@@ -25,6 +25,7 @@ def inference(model, data_loader, device, mapping, allowed_species, threshold):
         outputs = model(images, emb)  # Forward pass
         # Temperature scaling
         #outputs = T_scaling(outputs, temperature)
+        #outputs = F.softmax(outputs)
         outputs = F.sigmoid(outputs)
 
 

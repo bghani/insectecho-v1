@@ -43,8 +43,8 @@ if __name__ == '__main__':
         recording_lat = float(argv[1])
         recording_long = float(argv[2])
     else:
-        recording_lat = 38.08  # Example latitude
-        recording_long = 24.4  # Example longitude
+        recording_lat = 34.99  # Example latitude
+        recording_long = 33.22  # Example longitude
     print(f"# Species list for {recording_lat}, {recording_long}:")
 
     species_present = get_species_list(recording_lat, recording_long)
@@ -52,6 +52,6 @@ if __name__ == '__main__':
     for sp in sorted(list(species_present['birdlife_scientific_name'])):
         print(sp)
 
-    species_present.to_csv('inputs/species_list_greece.csv', index=False, header=False)
+    species_present.to_csv('inputs/species_list_cyprus.csv', index=False, header=False)
 
 

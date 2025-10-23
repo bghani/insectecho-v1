@@ -16,7 +16,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from timm.models.layers.helpers import to_2tuple
+from timm.layers.helpers import to_2tuple
 
 from .helpers.vit_helpers import update_default_cfg_and_kwargs, DropPath, trunc_normal_, build_model_with_cfg
 
@@ -468,6 +468,12 @@ class PaSST(nn.Module):
         if self.num_tokens == 2:
             self.head_dist = nn.Linear(self.embed_dim, self.num_classes) if num_classes > 0 else nn.Identity()
 
+    def interpolate_time_pos_embed(self, embed, target_T):
+        B, E, L, T = embed.shape
+        embed_reshaped = embed.reshape(B * E * L, 1, T)
+        interp = F.interpolate(embed_reshaped, size=target_T, mode='linear', align_corners=False)
+        return interp.reshape(B, E, L, target_T)
+
     def forward_features(self, x):
         global first_RUN  # not jit friendly? use trace instead
         x = self.patch_embed(x)  # [b, e, f, t]
@@ -476,9 +482,19 @@ class PaSST(nn.Module):
         # Adding Time/Freq information
         #if first_RUN: print(" self.time_new_pos_embed.shape", self.time_new_pos_embed.shape)
         time_new_pos_embed = self.time_new_pos_embed
+        if time_new_pos_embed.shape[-1] > x.shape[-1]:
+            time_new_pos_embed = time_new_pos_embed[:, :, :, :x.shape[-1]]
+        elif time_new_pos_embed.shape[-1] < x.shape[-1]:
+            # Option 1: truncate x 
+            #x = x[:, :, :, :time_new_pos_embed.shape[-1]]
+            # Option 2 (better): interpolate time positional embeddings
+            time_new_pos_embed = self.interpolate_time_pos_embed(time_new_pos_embed, x.shape[-1])
+        '''
+        #Old code
         if x.shape[-1] != time_new_pos_embed.shape[-1]:
             time_new_pos_embed = time_new_pos_embed[:, :, :, :x.shape[-1]]
             #if first_RUN: print(" CUT time_new_pos_embed.shape", time_new_pos_embed.shape)
+        '''    
         x = x + time_new_pos_embed
         #if first_RUN: print(" self.freq_new_pos_embed.shape", self.freq_new_pos_embed.shape)
         x = x + self.freq_new_pos_embed

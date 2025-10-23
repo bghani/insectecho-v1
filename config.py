@@ -54,11 +54,12 @@ import argparse
 import time
 import shutil
 from datetime import datetime
+import logging
 
 
 # Set the device
 train_on_gpu=torch.cuda.is_available()
-device = torch.device("cuda:0" if train_on_gpu else "cpu")
+device = torch.device("cuda:1" if train_on_gpu else "cpu")
 
 # Global vars
 SEED = 78
@@ -71,8 +72,8 @@ RANDOM_SEED = 1337
 np.random.seed(RANDOM_SEED)
 random.seed(RANDOM_SEED)
 SAMPLE_RATE_AST = 32000
-SAMPLE_RATE = 48000
-SIGNAL_LENGTH = 3 # seconds
+SAMPLE_RATE = 96000
+SIGNAL_LENGTH = 5 # seconds
 SPEC_SHAPE = (298, 128) # width x height
 FMIN = 20
 FMAX = 15000

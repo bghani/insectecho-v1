@@ -33,15 +33,15 @@ class InferenceDataset(torch.utils.data.Dataset):
             x, rate = [], SAMPLE_RATE   
 
         
-        x = (x - self.global_mean) / self.global_std
+        #x = (x - self.global_mean) / self.global_std
         #convert mixed to tensor
         x = torch.from_numpy(x).float() 
 
 
         if self.model == 'passt':
             #Resample the audio from 48k to 32k for PaSST
-            resampler = T.Resample(SAMPLE_RATE, SAMPLE_RATE_AST, dtype=x.dtype)
-            x = resampler(x)  
+            #resampler = T.Resample(SAMPLE_RATE, SAMPLE_RATE_AST, dtype=x.dtype)
+            #x = resampler(x)  
             # Create dummy embedding 
             birdnet_embedding = np.zeros(320) 
         else:
