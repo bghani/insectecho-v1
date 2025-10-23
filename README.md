@@ -3,7 +3,14 @@
 
 ##  Introduction
 
-This repo contains InsectEcho v1 model and scripts for processing a batch of audio data. InsectEcho v1 is a multi-label insect species recognition model, developed for Europe that can classify grasshoppers, crickets and a few cicada species. 
+This repository contains **InsectEcho v1**, a multi-label insect species recognition model and accompanying scripts for processing batches of audio data.  
+**InsectEcho v1** has been developed for Europe and can classify grasshoppers, crickets, and a few cicada species.  
+
+Model training details, evaluation results, and background can be found in the paper:  
+📄 [**Generalization in insect sound classification: impact of transfer learning and dataset characteristics**](https://arxiv.org/abs/2503.15074)
+
+If you use this repository or the **InsectEcho v1** model in your work, please cite the above paper.  
+
 We will keep this repository up-to-date with new models and improved interfaces to enable people to run the analysis.
 
 
